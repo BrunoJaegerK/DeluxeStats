@@ -1,0 +1,40 @@
+settings:
+  # Número de jugadores premiados por categoría.
+  top-size: 10
+
+  # Mensaje enviado al jugador cuando recibe una recompensa.
+  reward-message: "§a¡Has recibido una recompensa de temporada!"
+
+rewards:
+  kills:
+    "1":
+      commands:
+        - "give {player} diamond 10"
+    "2":
+      commands:
+        - "give {player} diamond 5"
+    "3":
+      commands:
+        - "give {player} diamond 3"
+
+  ores_mined:
+    "1":
+      commands:
+        - "give {player} emerald 10"
+    "2":
+      commands:
+        - "give {player} emerald 5"
+    "3":
+      commands:
+        - "give {player} emerald 3"
+
+  active_seconds:
+    "1":
+      commands:
+        - "give {player} gold_ingot 10"
+    "2":
+      commands:
+        - "give {player} gold_ingot 5"
+    "3":
+      commands:
+        - "give {player} gold_ingot 3"

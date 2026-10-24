@@ -12,6 +12,8 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
+out/
 
 ### Eclipse ###
 .apt_generated
@@ -37,3 +39,17 @@ build/
 
 ### Mac OS ###
 .DS_Store
+Thumbs.db
+
+## MAVEN ##
+target/
+
+libs/server.jar
+libs/economyapi-2.0.5.jar
+
+## BASE DE DATOS H2 ##
+*.mv.db
+*.trace.db
+
+## LOGS ##
+*.log

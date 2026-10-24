@@ -1,0 +1,8 @@
+# Configuración de los rankings de DeluxeStats
+rankings:
+  # Cantidad máxima de posiciones mostradas en los rankings.
+  # Valores recomendados: 5, 10 o 20.
+  top-size: 10
+
+  # Tiempo de caché de los rankings en segundos.
+  cache-seconds: 30

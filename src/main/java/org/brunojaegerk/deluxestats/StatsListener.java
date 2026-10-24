@@ -119,6 +119,7 @@ public class StatsListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -128,7 +129,25 @@ public class StatsListener implements Listener {
                 player.getUniqueId(),
                 new Session(player, now)
         );
+
+        // Registrar o actualizar el jugador en las estadísticas.
+        try {
+            deluxeStats.getDatabaseManager().ensurePlayer(player);
+        } catch (SQLException exception) {
+            plugin.getLogger().error(
+                    "No se pudo actualizar el registro de "
+                            + player.getName(),
+                    exception
+            );
+        }
+
+        // Recuperar las recompensas pendientes al volver a conectarse.
+        if (deluxeStats.getSeasonRewardManager() != null) {
+            deluxeStats.getSeasonRewardManager()
+                    .deliverPendingRewards(player);
+        }
     }
+
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {

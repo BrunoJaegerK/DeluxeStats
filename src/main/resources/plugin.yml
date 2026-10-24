@@ -1,0 +1,12 @@
+name: DeluxeStats
+main: org.brunojaegerk.deluxestats.DeluxeStats
+version: "1.0.0"
+api: ["1.0.0"]
+softdepend: [EconomyAPI, PlaceholderAPI]
+author: BrunoJaegerK
+description: Estadisticas, rankings y temporadas para DeluxeMine
+
+commands:
+  stats:
+    description: Muestra tus estadisticas personales
+    usage: "/stats"

@@ -1,52 +1,76 @@
 # 💜 DeluxeStats
 
-**Un plugin de estadísticas, rankings y temporadas para servidores Nukkit.**
+**Plugin de estadísticas, rankings y temporadas competitivas para servidores Minecraft Bedrock con Nukkit.**
 
-DeluxeStats permite registrar las estadísticas de los jugadores, consultar su progreso y organizar temporadas competitivas con recompensas configurables.
+DeluxeStats registra el progreso de los jugadores, permite consultar estadísticas PvP y de minería, organiza rankings competitivos y gestiona recompensas de temporada.
 
 > 💜 **Creado con cariño para DELUXEMINE NETWORK.**
 >
-> Este proyecto nace con la intención de ofrecer una experiencia de supervivencia más competitiva, organizada y divertida para la comunidad de DELUXEMINE NETWORK. Cada función está pensada para reconocer el esfuerzo de los jugadores y motivarlos a seguir progresando.
+> Este proyecto nace con la intención de ofrecer una experiencia de supervivencia más competitiva, organizada y divertida. Cada función está pensada para reconocer el esfuerzo de los jugadores y motivarlos a seguir progresando.
 
 ---
 
-## ✨ Características principales
+## 📌 Índice
 
-📊 **Estadísticas de jugadores**
-- Eliminaciones (`kills`).
-- Muertes (`deaths`).
-- Minerales extraídos (`ores_mined`).
-- Dinero obtenido (`money_earned`).
-- Racha actual de eliminaciones (`current_streak`).
-- Mejor racha de eliminaciones (`best_streak`).
-- Tiempo de juego activo (`active_seconds`).
+- [✨ Características](#-características)
+- [📋 Requisitos](#-requisitos)
+- [📥 Instalación](#-instalación)
+- [🎮 Comandos](#-comandos)
+- [📊 Estadísticas registradas](#-estadísticas-registradas)
+- [🏆 Rankings](#-rankings)
+- [🔌 Placeholders de PlaceholderAPI](#-placeholders-de-placeholderapi)
+- [⚙️ Configuración](#️-configuración)
+- [📅 Sistema de temporadas](#-sistema-de-temporadas)
+- [🎁 Recompensas de temporada](#-recompensas-de-temporada)
+- [💾 Base de datos y actualizaciones](#-base-de-datos-y-actualizaciones)
+- [🛠️ Compilar desde el código fuente](#️-compilar-desde-el-código-fuente)
+- [🐛 Reportar errores](#-reportar-errores)
+- [💜 DELUXEMINE NETWORK](#-deluxemine-network)
 
-🏆 **Rankings competitivos**
-- Ranking por eliminaciones.
-- Ranking por minerales extraídos.
-- Ranking por tiempo de juego activo.
+---
 
-📅 **Sistema de temporadas**
+## ✨ Características
+
+### 📊 Estadísticas de jugadores
+
+- ⚔️ Eliminaciones PvP.
+- ☠️ Muertes.
+- ⛏️ Minerales extraídos.
+- ⏱️ Tiempo de juego activo.
+- 🔥 Racha actual de eliminaciones.
+- 🏅 Mejor racha de eliminaciones.
+- 💰 Consulta del saldo mediante EconomyAPI.
+
+### 🏆 Rankings competitivos
+
+- Ranking de eliminaciones.
+- Ranking de muertes.
+- Ranking de minerales extraídos.
+- Ranking de tiempo activo.
+- Ranking de racha actual.
+- Ranking de mejor racha.
+- Consulta de los mejores jugadores mediante `/topstats`.
+- Placeholders para mostrar rankings en interfaces compatibles.
+
+### 📅 Sistema de temporadas
+
 - Temporadas de 30 días.
-- Registro de los ganadores por categoría.
-- Recompensas configurables según la posición alcanzada.
-- Preparación de la siguiente temporada al finalizar la anterior.
+- Registro de ganadores por categoría.
+- Clasificación de jugadores por temporada.
+- Recompensas configurables por posición.
+- Registro de recompensas pendientes.
+- Entrega de recompensas pendientes cuando el jugador vuelve a conectarse.
 
-🎁 **Recompensas automáticas**
-- Ejecución de comandos de consola configurados por el administrador.
-- Registro de las recompensas pendientes.
-- Entrega de recompensas pendientes cuando el jugador vuelve a entrar al servidor.
+### 💾 Almacenamiento persistente
 
-💾 **Persistencia de datos**
 - Base de datos H2 local.
-- Conservación de las estadísticas entre reinicios.
-- Almacenamiento de información de temporadas, ganadores y recompensas.
+- Conservación de estadísticas entre reinicios.
+- Almacenamiento de datos de temporadas, ganadores y recompensas.
 
-💰 **Integración económica**
-- Integración con EconomyAPI para consultar el saldo del jugador.
+### 🔌 Integraciones
 
-🔌 **Integración opcional**
-- Compatibilidad con PlaceholderAPI, si está instalada y configurada correctamente.
+- **EconomyAPI:** consulta del saldo del jugador.
+- **PlaceholderAPI:** integración opcional para estadísticas personales y rankings TOP.
 
 ---
 
@@ -55,75 +79,260 @@ DeluxeStats permite registrar las estadísticas de los jugadores, consultar su p
 Antes de instalar DeluxeStats, asegúrate de disponer de:
 
 - Un servidor compatible con **NukkitPetteriM1Edition**.
-- Java 8 o un entorno compatible con la versión de Java utilizada por tu servidor.
+- Java compatible con el servidor; el proyecto está configurado para compilar con Java 8.
 - **EconomyAPI 2.0.5**.
-- Los archivos de dependencias necesarios para compilar el proyecto desde el código fuente.
+- **PlaceholderAPI para Nukkit**, si quieres utilizar los placeholders.
 
-> ⚠️ DeluxeStats está desarrollado para el ecosistema Nukkit. No se garantiza compatibilidad con Paper, Spigot u otros servidores que utilicen APIs diferentes.
+> ⚠️ DeluxeStats está desarrollado para la API de Nukkit. No se garantiza su compatibilidad con Paper, Spigot, Bukkit u otras plataformas con APIs diferentes.
 
 ---
 
 ## 📥 Instalación
 
-1. Descarga el archivo JAR compilado de DeluxeStats.
-2. Colócalo en la carpeta `plugins/` de tu servidor.
+1. Descarga el JAR compilado de DeluxeStats desde la sección de [Releases](https://github.com/BrunoJaegerK/DeluxeStats/releases).
+2. Coloca el archivo en la carpeta `plugins/` del servidor.
 3. Comprueba que EconomyAPI esté instalado y funcione correctamente.
-4. Inicia el servidor para que el plugin cree sus archivos y su base de datos.
-5. Revisa la configuración de temporadas en `plugins/DeluxeStats/seasons.yml`, si el archivo se genera en tu versión.
-6. Configura las recompensas que quieras entregar a los mejores jugadores.
-7. Reinicia el servidor para aplicar los cambios.
+4. Instala PlaceholderAPI si necesitas utilizar los placeholders.
+5. Inicia o reinicia el servidor.
+6. Comprueba la consola para verificar que DeluxeStats se haya iniciado correctamente.
+7. Revisa los archivos de configuración que genera el plugin dentro de `plugins/DeluxeStats/`.
 
-**Importante:** conserva la base de datos existente al actualizar el plugin. Haz una copia de seguridad antes de reemplazar archivos o modificar configuraciones.
+Al iniciar, DeluxeStats inicializa la base de datos y crea la configuración de recompensas `seasons.yml` si todavía no existe.
+
+### 🔄 Actualizar el plugin
+
+1. Detén el servidor.
+2. Realiza una copia de seguridad de la carpeta `plugins/DeluxeStats/`.
+3. Sustituye el JAR antiguo por el nuevo.
+4. Inicia el servidor y revisa los registros.
+
+**Importante:** no elimines la base de datos para actualizar el plugin. Borrar ese archivo puede provocar la pérdida de estadísticas y del historial almacenado.
 
 ---
 
-## 🛠️ Compilar desde el código fuente
+## 🎮 Comandos
 
-Puedes abrir el proyecto en IntelliJ IDEA y compilarlo con Maven.
+### Comandos disponibles para consultar estadísticas
 
-### Pasos
+| Comando | Descripción |
+|---|---|
+| `/stats` | Consulta las estadísticas personales. |
+| `/topstats kills` | Muestra el TOP 10 de eliminaciones. |
+| `/topstats deaths` | Muestra el TOP 10 de muertes. |
+| `/topstats ores` | Muestra el TOP 10 de minerales extraídos. |
+| `/topstats playtime` | Muestra el TOP 10 de tiempo activo. |
+| `/topstats streak` | Muestra el TOP 10 de mejores rachas. |
 
-1. Clona o descarga el repositorio.
-2. Abre el proyecto desde IntelliJ IDEA.
-3. Configura un JDK compatible con Java 8.
-4. Comprueba que las dependencias locales requeridas estén disponibles.
-5. Ejecuta la tarea Maven `clean package`.
+### Ejemplos
 
-También puedes ejecutar el siguiente comando desde una terminal en la carpeta del proyecto:
+Consultar tus estadísticas:
 
-```bash
-mvn clean package
+```text
+/stats
 ```
 
-Si Maven está instalado y configurado correctamente, el JAR compilado debería aparecer dentro de `target/`.
+Consultar quiénes tienen más eliminaciones:
 
-### Dependencias locales
+```text
+/topstats kills
+```
 
-El proyecto utiliza archivos JAR locales para las APIs del servidor y EconomyAPI. Revisa el `pom.xml` para conocer sus rutas y nombres exactos.
+Consultar quiénes han extraído más minerales:
 
-Por motivos de seguridad y distribución, no incluyas en el repositorio bases de datos de servidores, archivos privados del servidor ni dependencias cuya redistribución no esté autorizada.
+```text
+/topstats ores
+```
+
+Consultar quiénes tienen más tiempo activo:
+
+```text
+/topstats playtime
+```
+
+Consultar las mejores rachas:
+
+```text
+/topstats streak
+```
+
+**Nota:** el comando `/topstats streak` ordena por `best_streak`, es decir, por la mejor racha registrada. Los rankings de este comando muestran hasta 10 jugadores.
 
 ---
 
-## 🏅 Sistema de temporadas
+## 📊 Estadísticas registradas
 
-DeluxeStats organiza la competición en temporadas de **30 días**.
-
-Las categorías contempladas son:
-
-| Categoría | Identificador | Descripción |
+| Estadística | Campo interno | Descripción |
 |---|---|---|
-| ⚔️ Eliminaciones | `kills` | Eliminaciones registradas |
-| ⛏️ Minerales | `ores_mined` | Minerales extraídos |
-| ⏱️ Tiempo activo | `active_seconds` | Tiempo de juego activo registrado |
+| Eliminaciones | `kills` | Eliminaciones PvP registradas. |
+| Muertes | `deaths` | Muertes del jugador. |
+| Minería | `ores_mined` | Minerales extraídos registrados. |
+| Tiempo activo | `active_seconds` | Tiempo activo acumulado. |
+| Racha actual | `current_streak` | Racha actual de eliminaciones. |
+| Mejor racha | `best_streak` | Mejor racha de eliminaciones registrada. |
+| Dinero | `money_earned` | Campo de estadísticas económicas almacenado por el sistema. |
+| Saldo actual | EconomyAPI | Saldo consultado a través de EconomyAPI. |
 
-Al finalizar una temporada, el plugin registra a los ganadores y prepara las recompensas correspondientes según la configuración.
+### ⏱️ Registro del tiempo activo
 
-### 🎁 Configuración de recompensas
+DeluxeStats utiliza un sistema de seguimiento de actividad para evitar contabilizar indefinidamente el tiempo de jugadores inactivos.
 
-Las recompensas se configuran mediante comandos de consola. El siguiente ejemplo ilustra cómo podrías organizar los premios para las primeras posiciones:
+El rastreador considera como actividad el movimiento, las interacciones, el chat y la rotura de bloques. El sistema utiliza un intervalo de 60 segundos desde la última actividad para determinar el tiempo que puede contabilizarse.
+
+El tiempo activo se guarda periódicamente para reducir la pérdida de progreso ante interrupciones.
+
+---
+
+## 🏆 Rankings
+
+DeluxeStats permite consultar diferentes categorías competitivas.
+
+| Categoría | Identificador | Qué muestra |
+|---|---|---|
+| ⚔️ Eliminaciones | `kills` | Jugadores con más eliminaciones. |
+| ☠️ Muertes | `deaths` | Jugadores con más muertes. |
+| ⛏️ Minería | `ores` | Jugadores con más minerales extraídos. |
+| ⏱️ Tiempo activo | `playtime` | Jugadores con más tiempo activo. |
+| 🔥 Racha actual | `streak` | Racha actual de eliminaciones. |
+| 🏅 Mejor racha | `best_streak` | Mejor racha registrada. |
+
+Los rankings disponibles mediante PlaceholderAPI permiten consultar el nombre del jugador y el valor correspondiente a cada posición. El tamaño se controla mediante `rankings.top-size`.
+
+---
+
+## 🔌 Placeholders de PlaceholderAPI
+
+DeluxeStats registra placeholders cuando **PlaceholderAPI está instalado**. Puedes utilizarlos en plugins compatibles con PlaceholderAPI para mostrar estadísticas, saldos y rankings en interfaces, mensajes u otros elementos que admitan placeholders.
+
+### 📊 Estadísticas personales
+
+| Placeholder | Descripción |
+|---|---|
+| `%deluxestats_kills%` | Eliminaciones del jugador consultado. |
+| `%deluxestats_deaths%` | Muertes del jugador consultado. |
+| `%deluxestats_ores%` | Minerales extraídos por el jugador. |
+| `%deluxestats_playtime%` | Tiempo activo del jugador, con formato de tiempo. |
+| `%deluxestats_streak%` | Racha actual de eliminaciones. |
+| `%deluxestats_best_streak%` | Mejor racha de eliminaciones. |
+| `%deluxestats_money%` | Saldo actual consultado mediante EconomyAPI. |
+
+### 🏆 Placeholders TOP
+
+Cada categoría proporciona dos tipos de placeholders:
+
+- `_name`: devuelve el nombre del jugador en esa posición.
+- `_value`: devuelve el valor estadístico de esa posición.
+
+Sustituye `<posición>` por un número del 1 al tamaño configurado en `rankings.top-size`.
+
+| Categoría | Nombre del jugador | Valor |
+|---|---|---|
+| ⚔️ Eliminaciones | `%deluxestats_top_kills_<posición>_name%` | `%deluxestats_top_kills_<posición>_value%` |
+| ☠️ Muertes | `%deluxestats_top_deaths_<posición>_name%` | `%deluxestats_top_deaths_<posición>_value%` |
+| ⛏️ Minerales | `%deluxestats_top_ores_<posición>_name%` | `%deluxestats_top_ores_<posición>_value%` |
+| ⏱️ Tiempo activo | `%deluxestats_top_playtime_<posición>_name%` | `%deluxestats_top_playtime_<posición>_value%` |
+| 🔥 Racha actual | `%deluxestats_top_streak_<posición>_name%` | `%deluxestats_top_streak_<posición>_value%` |
+| 🏅 Mejor racha | `%deluxestats_top_best_streak_<posición>_name%` | `%deluxestats_top_best_streak_<posición>_value%` |
+
+### 💡 Ejemplos de uso
+
+**Mostrar al jugador con más eliminaciones:**
+
+```text
+%deluxestats_top_kills_1_name%
+```
+
+**Mostrar sus eliminaciones:**
+
+```text
+%deluxestats_top_kills_1_value%
+```
+
+**Mostrar el jugador que más minerales ha extraído:**
+
+```text
+%deluxestats_top_ores_1_name%
+```
+
+**Mostrar el tiempo activo del primer puesto:**
+
+```text
+%deluxestats_top_playtime_1_value%
+```
+
+**Mostrar las estadísticas personales de un jugador:**
+
+```text
+Eliminaciones: %deluxestats_kills%
+Muertes: %deluxestats_deaths%
+Minerales: %deluxestats_ores%
+Tiempo activo: %deluxestats_playtime%
+Racha actual: %deluxestats_streak%
+Mejor racha: %deluxestats_best_streak%
+Saldo: %deluxestats_money%
+```
+
+### 📋 Valores cuando no hay resultados
+
+Si la posición solicitada no tiene un jugador disponible:
+
+- El placeholder `_name` devuelve `-`.
+- El placeholder `_value` devuelve `0`.
+
+Los valores TOP de tiempo activo se devuelven con formato de tiempo. Las estadísticas personales de tiempo activo también utilizan un formato de tiempo.
+
+### ⚙️ Configuración de rankings y caché
+
+Los rankings TOP se configuran en `plugins/DeluxeStats/config.yml`:
 
 ```yaml
+# Configuración de los rankings de DeluxeStats
+rankings:
+  # Cantidad máxima de posiciones TOP disponibles.
+  top-size: 10
+
+  # Tiempo de caché de los rankings, en segundos.
+  cache-seconds: 30
+```
+
+| Opción | Valor predeterminado | Descripción |
+|---|---:|---|
+| `top-size` | `10` | Número de posiciones disponibles para cada categoría TOP. El código limita el valor al rango de 1 a 100. |
+| `cache-seconds` | `30` | Tiempo durante el cual se reutilizan los resultados TOP en caché. El mínimo aplicado es de 1 segundo. |
+
+**Importante:** si PlaceholderAPI no está instalado, DeluxeStats muestra una advertencia en la consola y no registra los placeholders.
+
+---
+
+## ⚙️ Configuración
+
+### Archivo `config.yml`
+
+El archivo de configuración controla los rankings TOP:
+
+```yaml
+rankings:
+  top-size: 10
+  cache-seconds: 30
+```
+
+Ajusta `top-size` según el número de jugadores que quieras mostrar. Un valor de `10` permite consultar las posiciones del 1 al 10 mediante los placeholders TOP.
+
+El valor `cache-seconds` controla durante cuánto tiempo se reutilizan los resultados almacenados en caché.
+
+### Archivo `seasons.yml`
+
+Este archivo contiene los ajustes de las recompensas de temporada.
+
+El siguiente ejemplo corresponde a la estructura utilizada por el recurso de configuración del proyecto:
+
+```yaml
+settings:
+  # Número de jugadores premiados por categoría.
+  top-size: 10
+
+  # Mensaje enviado al jugador cuando recibe una recompensa.
+  reward-message: "§a¡Has recibido una recompensa de temporada!"
+
 rewards:
   kills:
     "1":
@@ -159,50 +368,103 @@ rewards:
         - "give {player} gold_ingot 3"
 ```
 
-**Cómo funciona:**
-
-- `kills`: define premios para el ranking de eliminaciones.
-- `ores_mined`: define premios para el ranking de minería.
-- `active_seconds`: define premios para el ranking de tiempo activo.
-- `"1"`, `"2"` y `"3"` representan las posiciones premiadas.
-- `commands`: contiene los comandos que ejecutará la consola al procesar la recompensa.
-- `{player}` representa el nombre del jugador que recibirá el premio.
-
-Puedes personalizar los premios para adaptarlos a la economía y al estilo de tu servidor.
-
-> ⚠️ Este bloque es un ejemplo de estructura. Antes de copiarlo directamente, compáralo con el `seasons.yml` real generado por tu versión de DeluxeStats. Los nombres de los objetos y la sintaxis de los comandos pueden variar según la versión del servidor y los plugins instalados.
+> ⚠️ Los comandos de recompensa son ejemplos. Comprueba que los nombres de los objetos y los comandos sean compatibles con tu versión de Nukkit y los plugins instalados.
 
 ---
 
-## 📊 Consultar estadísticas
+## 📅 Sistema de temporadas
 
-Los jugadores pueden utilizar:
+DeluxeStats organiza la competición en temporadas de **30 días**.
 
-```text
-/stats
-```
+Las categorías utilizadas para registrar los ganadores de temporada son:
 
-Este comando permite consultar las estadísticas personales registradas por DeluxeStats, como eliminaciones, muertes, minería, saldo, rachas y tiempo de juego activo.
+| Categoría | Identificador interno |
+|---|---|
+| ⚔️ Eliminaciones | `kills` |
+| ⛏️ Minerales extraídos | `ores_mined` |
+| ⏱️ Tiempo activo | `active_seconds` |
 
-El proyecto también incluye una implementación separada para los rankings. Consulta los comandos registrados en `plugin.yml` para conocer el nombre exacto del comando disponible en tu compilación.
+Cuando finaliza una temporada, el sistema procesa las clasificaciones, registra a los ganadores y prepara las recompensas configuradas para las posiciones correspondientes.
+
+Las recompensas pendientes se guardan en la base de datos y pueden entregarse cuando el jugador vuelve a conectarse.
+
+### 🎁 Cómo funcionan las recompensas
+
+- `settings.top-size` establece cuántos puestos se procesan por categoría.
+- `rewards` contiene la configuración de premios.
+- `kills`, `ores_mined` y `active_seconds` identifican las categorías premiadas.
+- `"1"`, `"2"` y `"3"` representan las posiciones.
+- `commands` contiene los comandos que se ejecutarán para entregar cada premio.
+- `{player}` se sustituye por el nombre del jugador destinatario.
+
+Puedes personalizar los comandos para entregar objetos, dinero u otras recompensas compatibles con los comandos disponibles en tu servidor.
+
+**Recomendación:** haz una copia de seguridad de `seasons.yml` antes de modificarlo. Utiliza una configuración YAML válida para evitar errores al cargar las recompensas.
 
 ---
 
-## 💾 Almacenamiento de datos
+## 💾 Base de datos y actualizaciones
 
-DeluxeStats utiliza una base de datos H2 local. El archivo de datos se encuentra normalmente en:
+DeluxeStats utiliza **H2** como base de datos local.
+
+El archivo suele encontrarse en:
 
 ```text
 plugins/DeluxeStats/deluxestats.mv.db
 ```
 
-La base de datos almacena información de estadísticas, temporadas, ganadores y recompensas.
+La base de datos conserva la información de los jugadores, las estadísticas, las temporadas, los ganadores y las recompensas pendientes.
 
-**Recomendaciones:**
+### 🔐 Buenas prácticas
+
 - Realiza copias de seguridad periódicas.
-- No elimines el archivo de base de datos para intentar solucionar errores.
-- Antes de actualizar el plugin, detén el servidor y respalda los datos.
-- Evita modificar la base de datos manualmente sin conocer su estructura.
+- Detén el servidor antes de actualizar el JAR.
+- No elimines la base de datos para intentar solucionar errores.
+- No publiques archivos de base de datos de tu servidor.
+- Evita editar manualmente los datos almacenados sin conocer su estructura.
+
+---
+
+## 🛠️ Compilar desde el código fuente
+
+El proyecto utiliza Maven y está configurado para compilar con Java 8.
+
+### Requisitos de compilación
+
+- IntelliJ IDEA u otro IDE compatible con Maven.
+- JDK compatible con Java 8.
+- El JAR de NukkitPetteriM1Edition utilizado para desarrollar el plugin.
+- EconomyAPI 2.0.5.
+- Acceso al repositorio de dependencias Maven requerido por PlaceholderAPI.
+
+### Dependencias locales
+
+El proyecto espera encontrar las dependencias locales en la carpeta `libs/`:
+
+```text
+libs/
+├── server.jar
+└── economyapi-2.0.5.jar
+```
+
+Comprueba que los nombres y las rutas coincidan con los definidos en el `pom.xml`.
+
+### Pasos de compilación
+
+1. Clona o descarga el repositorio.
+2. Abre el proyecto en IntelliJ IDEA.
+3. Configura el JDK correspondiente.
+4. Coloca los JAR locales requeridos en `libs/`.
+5. Recarga el proyecto Maven.
+6. Ejecuta:
+
+```bash
+mvn clean package
+```
+
+Si la compilación finaliza correctamente, el JAR se encontrará en `target/`.
+
+**Nota:** las dependencias locales del servidor y EconomyAPI no necesariamente se distribuyen junto al código fuente. Asegúrate de disponer de ellas antes de compilar.
 
 ---
 
@@ -210,23 +472,25 @@ La base de datos almacena información de estadísticas, temporadas, ganadores y
 
 ¿Encontraste un error o tienes una idea para mejorar DeluxeStats?
 
-Puedes utilizar el repositorio de GitHub para comunicar problemas, proponer funciones o compartir sugerencias.
+Puedes comunicar problemas, proponer funciones o consultar los cambios del proyecto en GitHub.
 
 🔗 **Repositorio oficial:**  
 https://github.com/BrunoJaegerK/DeluxeStats
 
 Al reportar un error, incluye cuando sea posible:
-- La versión del servidor.
-- La versión de DeluxeStats.
-- Los pasos necesarios para reproducir el problema.
+
+- La versión de NukkitPetteriM1Edition.
+- La versión del JAR de DeluxeStats.
+- La versión de EconomyAPI y PlaceholderAPI, si están instalados.
+- Los pasos para reproducir el problema.
 - El mensaje completo de la consola.
-- La configuración relacionada con el error, ocultando cualquier información privada.
+- Los archivos de configuración relevantes, ocultando cualquier dato privado.
 
 ---
 
-## 💜 Un proyecto para DELUXEMINE NETWORK
+## 💜 DELUXEMINE NETWORK
 
-DeluxeStats fue creado con cariño para **DELUXEMINE NETWORK**, con el objetivo de aportar una experiencia de juego más completa, competitiva y entretenida.
+DeluxeStats fue creado con cariño para **DELUXEMINE NETWORK**, con el objetivo de ofrecer una experiencia de supervivencia más competitiva, entretenida y organizada.
 
 Gracias a todos los jugadores y colaboradores que forman parte de la comunidad. Sus ideas y sugerencias ayudan a que el proyecto siga creciendo.
 
@@ -235,3 +499,4 @@ Gracias a todos los jugadores y colaboradores que forman parte de la comunidad. 
 ---
 
 *DeluxeStats — estadísticas, competición y progreso para tu aventura.*
+

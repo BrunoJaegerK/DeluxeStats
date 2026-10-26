@@ -148,7 +148,6 @@ public class StatsListener implements Listener {
         }
     }
 
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getFrom() == null || event.getTo() == null) {
@@ -225,13 +224,37 @@ public class StatsListener implements Listener {
             if (lastDamage instanceof Player) {
                 Player killer = (Player) lastDamage;
 
-                if (!killer.getUniqueId().equals(
-                        victim.getUniqueId())) {
+                if (!killer.getUniqueId().equals(victim.getUniqueId())) {
 
-                    deluxeStats.getDatabaseManager().recordKill(killer);
-                    markActivity(killer);
+                    long remaining =
+                            deluxeStats.getKillAntiFarmManager()
+                                    .getRemainingCooldownMillis(killer, victim);
+
+                    if (remaining == 0L) {
+
+                        // La kill está permitida.
+                        deluxeStats.getDatabaseManager().recordKill(killer);
+                        markActivity(killer);
+
+                    } else {
+
+                        // Mostrar el tiempo restante sin reiniciar el bloqueo.
+                        long totalSeconds = (remaining + 999L) / 1000L;
+                        long minutes = totalSeconds / 60L;
+                        long seconds = totalSeconds % 60L;
+
+                        killer.sendMessage(
+                                "§c[DeluxeStats] §fTu kill contra §e"
+                                        + victim.getName()
+                                        + " §fno sumará estadísticas durante §e"
+                                        + minutes + "m "
+                                        + seconds + "s"
+                                        + " §f más."
+                        );
+                    }
                 }
             }
+
         } catch (SQLException exception) {
             plugin.getLogger().error(
                     "Error al guardar las estadísticas PvP.",

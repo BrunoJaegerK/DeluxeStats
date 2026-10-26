@@ -204,6 +204,25 @@ public class DatabaseManager {
                             + "ON season_stats (season_id, kills, ores_mined, "
                             + "active_seconds)"
             );
+
+            // Control anti-farmeo de kills entre parejas de jugadores.
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS kill_antifarm_pairs ("
+                            + "player_a_uuid VARCHAR(36) NOT NULL,"
+                            + "player_b_uuid VARCHAR(36) NOT NULL,"
+                            + "last_kill_at BIGINT NOT NULL,"
+                            + "PRIMARY KEY (player_a_uuid, player_b_uuid)"
+                            + ")"
+            );
+
+            statement.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS kill_antifarm_player_targets ("
+                            + "killer_uuid VARCHAR(36) NOT NULL,"
+                            + "victim_uuid VARCHAR(36) NOT NULL,"
+                            + "last_kill_at BIGINT NOT NULL,"
+                            + "PRIMARY KEY (killer_uuid, victim_uuid)"
+                            + ")"
+            );
         }
 
         plugin.getLogger().info(
@@ -786,6 +805,101 @@ public class DatabaseManager {
         }
 
         return ranking;
+    }
+
+    /**
+     * Comprueba si una kill puede sumar estadísticas.
+     *
+     * El bloqueo es independiente para cada dirección:
+     * A -> B no bloquea B -> A.
+     *
+     * @return 0 si la kill puede puntuar;
+     *         milisegundos restantes si está bloqueada.
+     */
+    public synchronized long tryRegisterKillPair(
+            Player killer,
+            Player victim,
+            long now,
+            long cooldownMillis
+    ) throws SQLException {
+
+        checkConnection();
+
+        if (killer == null || victim == null
+                || killer.getUniqueId().equals(victim.getUniqueId())) {
+            return cooldownMillis;
+        }
+
+        if (cooldownMillis <= 0L) {
+            throw new IllegalArgumentException(
+                    "El tiempo de espera debe ser positivo."
+            );
+        }
+
+        String killerUuid = killer.getUniqueId().toString();
+        String victimUuid = victim.getUniqueId().toString();
+
+        String selectSql =
+                "SELECT last_kill_at FROM kill_antifarm_player_targets "
+                        + "WHERE killer_uuid = ? AND victim_uuid = ?";
+
+        try (PreparedStatement select =
+                     connection.prepareStatement(selectSql)) {
+
+            select.setString(1, killerUuid);
+            select.setString(2, victimUuid);
+
+            try (ResultSet result = select.executeQuery()) {
+
+                if (result.next()) {
+                    long lastKillAt = result.getLong("last_kill_at");
+                    long elapsed = now - lastKillAt;
+
+                    if (elapsed < 0L) {
+                        return cooldownMillis;
+                    }
+
+                    if (elapsed < cooldownMillis) {
+                        return cooldownMillis - elapsed;
+                    }
+
+                    // El bloqueo terminó: esta kill vuelve a puntuar.
+                    String updateSql =
+                            "UPDATE kill_antifarm_player_targets "
+                                    + "SET last_kill_at = ? "
+                                    + "WHERE killer_uuid = ? "
+                                    + "AND victim_uuid = ?";
+
+                    try (PreparedStatement update =
+                                 connection.prepareStatement(updateSql)) {
+
+                        update.setLong(1, now);
+                        update.setString(2, killerUuid);
+                        update.setString(3, victimUuid);
+                        update.executeUpdate();
+                    }
+
+                    return 0L;
+                }
+            }
+        }
+
+        // Primera kill puntuable de este asesino contra esta víctima.
+        String insertSql =
+                "INSERT INTO kill_antifarm_player_targets "
+                        + "(killer_uuid, victim_uuid, last_kill_at) "
+                        + "VALUES (?, ?, ?)";
+
+        try (PreparedStatement insert =
+                     connection.prepareStatement(insertSql)) {
+
+            insert.setString(1, killerUuid);
+            insert.setString(2, victimUuid);
+            insert.setLong(3, now);
+            insert.executeUpdate();
+        }
+
+        return 0L;
     }
 
 }

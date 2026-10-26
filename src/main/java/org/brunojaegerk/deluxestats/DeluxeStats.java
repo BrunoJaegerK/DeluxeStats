@@ -14,6 +14,7 @@ import org.brunojaegerk.deluxestats.commands.TopStatsCommand;
 import org.brunojaegerk.deluxestats.database.DatabaseManager;
 import org.brunojaegerk.deluxestats.season.SeasonManager;
 import org.brunojaegerk.deluxestats.season.SeasonRewardManager;
+import org.brunojaegerk.deluxestats.antifarm.KillAntiFarmManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,12 +29,14 @@ public class DeluxeStats extends PluginBase implements Listener {
     private PlaceholderManager placeholderManager;
     private SeasonManager seasonManager;
     private SeasonRewardManager seasonRewardManager;
+    private KillAntiFarmManager killAntiFarmManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
         databaseManager = new DatabaseManager(this);
+        killAntiFarmManager = new KillAntiFarmManager(this);
 
         try {
             // Abrir la base de datos existente sin borrar estadísticas.
@@ -347,4 +350,9 @@ public class DeluxeStats extends PluginBase implements Listener {
     public SeasonRewardManager getSeasonRewardManager() {
         return seasonRewardManager;
     }
+
+    public KillAntiFarmManager getKillAntiFarmManager() {
+        return killAntiFarmManager;
+    }
+
 }

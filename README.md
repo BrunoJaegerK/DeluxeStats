@@ -494,6 +494,13 @@ DeluxeStats fue creado con cariño para **DELUXEMINE NETWORK**, con el objetivo 
 
 Gracias a todos los jugadores y colaboradores que forman parte de la comunidad. Sus ideas y sugerencias ayudan a que el proyecto siga creciendo.
 
+## 📜 Licencia
+
+Este proyecto está protegido bajo la
+[Apache License 2.0](LICENSE).
+
+Copyright © 2026 Bruno JaegerK.
+
 **Hecho con 💜 para DELUXEMINE NETWORK.**
 
 ---

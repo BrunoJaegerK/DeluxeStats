@@ -53,6 +53,11 @@ public class PlaceholderManager {
                 .visitorLoader(entry -> getMoney(entry.getPlayer()))
                 .build();
 
+        // Días restantes de la temporada actual.
+        api.builder("deluxestats_season_days_left", String.class)
+                .loader(entry -> getSeasonDaysLeft())
+                .build();
+
         plugin.getLogger().info(
                 "Placeholders de DeluxeStats registrados. "
                         + "TOP configurado: " + topSize
@@ -332,6 +337,44 @@ public class PlaceholderManager {
         private TopCache(long timestamp, List<TopEntry> entries) {
             this.timestamp = timestamp;
             this.entries = entries;
+        }
+    }
+
+    private String getSeasonDaysLeft() {
+
+        try {
+            Integer seasonId =
+                    plugin.getDatabaseManager().getCurrentSeasonId();
+
+            if (seasonId == null) {
+                return "Sin temporada";
+            }
+
+            long endTime =
+                    plugin.getDatabaseManager().getSeasonEndTime(seasonId);
+
+            long remaining = endTime - System.currentTimeMillis();
+
+            if (remaining <= 0L) {
+                return "0";
+            }
+
+            long days = remaining / 86_400_000L;
+
+            // Si queda menos de un día, mostrar 1.
+            if (days == 0L) {
+                days = 1L;
+            }
+
+            return String.valueOf(days);
+
+        } catch (SQLException exception) {
+            plugin.getLogger().error(
+                    "Error obteniendo los días restantes de la temporada.",
+                    exception
+            );
+
+            return "-";
         }
     }
 }

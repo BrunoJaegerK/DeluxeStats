@@ -2,7 +2,7 @@
 
 **Plugin de estadísticas, rankings y temporadas competitivas para servidores Minecraft Bedrock con Nukkit.**
 
-DeluxeStats registra el progreso de los jugadores, permite consultar estadísticas PvP y de minería, organiza rankings competitivos y gestiona recompensas de temporada.
+DeluxeStats registra el progreso de los jugadores, permite consultar estadísticas de minería y tiempo activo, organiza rankings y gestiona temporadas configurables.
 
 > 💜 **Creado con cariño para DELUXEMINE NETWORK.**
 >
@@ -33,33 +33,24 @@ DeluxeStats registra el progreso de los jugadores, permite consultar estadístic
 
 ### 📊 Estadísticas de jugadores
 
-- ⚔️ Eliminaciones PvP.
-- ☠️ Muertes.
 - ⛏️ Minerales extraídos.
 - ⏱️ Tiempo de juego activo.
-- 🔥 Racha actual de eliminaciones.
-- 🏅 Mejor racha de eliminaciones.
 - 💰 Consulta del saldo mediante EconomyAPI.
 
 ### 🏆 Rankings competitivos
 
-- Ranking de eliminaciones.
-- Ranking de muertes.
 - Ranking de minerales extraídos.
 - Ranking de tiempo activo.
-- Ranking de racha actual.
-- Ranking de mejor racha.
 - Consulta de los mejores jugadores mediante `/topstats`.
 - Placeholders para mostrar rankings en interfaces compatibles.
 
 ### 📅 Sistema de temporadas
 
 - Temporadas de 30 días.
-- Registro de ganadores por categoría.
-- Clasificación de jugadores por temporada.
-- Recompensas configurables por posición.
-- Registro de recompensas pendientes.
-- Entrega de recompensas pendientes cuando el jugador vuelve a conectarse.
+- Clasificación de minería y tiempo activo por temporada.
+- Recompensas opcionales por posición, desactivables desde `seasons.yml`.
+- Registro de recompensas pendientes y entrega al reconectarse cuando los premios están habilitados.
+- Reinicio administrativo de tops y temporada.
 
 ### 💾 Almacenamiento persistente
 
@@ -117,11 +108,9 @@ Al iniciar, DeluxeStats inicializa la base de datos y crea la configuración de 
 | Comando | Descripción |
 |---|---|
 | `/stats` | Consulta las estadísticas personales. |
-| `/topstats kills` | Muestra el TOP 10 de eliminaciones. |
-| `/topstats deaths` | Muestra el TOP 10 de muertes. |
 | `/topstats ores` | Muestra el TOP 10 de minerales extraídos. |
 | `/topstats playtime` | Muestra el TOP 10 de tiempo activo. |
-| `/topstats streak` | Muestra el TOP 10 de mejores rachas. |
+| `/topstats reset` | Reinicia los tops de minería/tiempo e inicia una temporada nueva (solo operadores). |
 
 ### Ejemplos
 
@@ -129,12 +118,6 @@ Consultar tus estadísticas:
 
 ```text
 /stats
-```
-
-Consultar quiénes tienen más eliminaciones:
-
-```text
-/topstats kills
 ```
 
 Consultar quiénes han extraído más minerales:
@@ -149,12 +132,6 @@ Consultar quiénes tienen más tiempo activo:
 /topstats playtime
 ```
 
-Consultar las mejores rachas:
-
-```text
-/topstats streak
-```
-
 **Nota:** el comando `/topstats streak` ordena por `best_streak`, es decir, por la mejor racha registrada. Los rankings de este comando muestran hasta 10 jugadores.
 
 ---
@@ -163,12 +140,8 @@ Consultar las mejores rachas:
 
 | Estadística | Campo interno | Descripción |
 |---|---|---|
-| Eliminaciones | `kills` | Eliminaciones PvP registradas. |
-| Muertes | `deaths` | Muertes del jugador. |
 | Minería | `ores_mined` | Minerales extraídos registrados. |
 | Tiempo activo | `active_seconds` | Tiempo activo acumulado. |
-| Racha actual | `current_streak` | Racha actual de eliminaciones. |
-| Mejor racha | `best_streak` | Mejor racha de eliminaciones registrada. |
 | Dinero | `money_earned` | Campo de estadísticas económicas almacenado por el sistema. |
 | Saldo actual | EconomyAPI | Saldo consultado a través de EconomyAPI. |
 
@@ -188,12 +161,8 @@ DeluxeStats permite consultar diferentes categorías competitivas.
 
 | Categoría | Identificador | Qué muestra |
 |---|---|---|
-| ⚔️ Eliminaciones | `kills` | Jugadores con más eliminaciones. |
-| ☠️ Muertes | `deaths` | Jugadores con más muertes. |
 | ⛏️ Minería | `ores` | Jugadores con más minerales extraídos. |
 | ⏱️ Tiempo activo | `playtime` | Jugadores con más tiempo activo. |
-| 🔥 Racha actual | `streak` | Racha actual de eliminaciones. |
-| 🏅 Mejor racha | `best_streak` | Mejor racha registrada. |
 
 Los rankings disponibles mediante PlaceholderAPI permiten consultar el nombre del jugador y el valor correspondiente a cada posición. El tamaño se controla mediante `rankings.top-size`.
 
@@ -207,12 +176,8 @@ DeluxeStats registra placeholders cuando **PlaceholderAPI está instalado**. Pue
 
 | Placeholder | Descripción |
 |---|---|
-| `%deluxestats_kills%` | Eliminaciones del jugador consultado. |
-| `%deluxestats_deaths%` | Muertes del jugador consultado. |
 | `%deluxestats_ores%` | Minerales extraídos por el jugador. |
 | `%deluxestats_playtime%` | Tiempo activo del jugador, con formato de tiempo. |
-| `%deluxestats_streak%` | Racha actual de eliminaciones. |
-| `%deluxestats_best_streak%` | Mejor racha de eliminaciones. |
 | `%deluxestats_money%` | Saldo actual consultado mediante EconomyAPI. |
 
 ### 🏆 Placeholders TOP
@@ -226,12 +191,8 @@ Sustituye `<posición>` por un número del 1 al tamaño configurado en `rankings
 
 | Categoría | Nombre del jugador | Valor |
 |---|---|---|
-| ⚔️ Eliminaciones | `%deluxestats_top_kills_<posición>_name%` | `%deluxestats_top_kills_<posición>_value%` |
-| ☠️ Muertes | `%deluxestats_top_deaths_<posición>_name%` | `%deluxestats_top_deaths_<posición>_value%` |
 | ⛏️ Minerales | `%deluxestats_top_ores_<posición>_name%` | `%deluxestats_top_ores_<posición>_value%` |
 | ⏱️ Tiempo activo | `%deluxestats_top_playtime_<posición>_name%` | `%deluxestats_top_playtime_<posición>_value%` |
-| 🔥 Racha actual | `%deluxestats_top_streak_<posición>_name%` | `%deluxestats_top_streak_<posición>_value%` |
-| 🏅 Mejor racha | `%deluxestats_top_best_streak_<posición>_name%` | `%deluxestats_top_best_streak_<posición>_value%` |
 
 ### 💡 Ejemplos de uso
 
@@ -262,12 +223,8 @@ Sustituye `<posición>` por un número del 1 al tamaño configurado en `rankings
 **Mostrar las estadísticas personales de un jugador:**
 
 ```text
-Eliminaciones: %deluxestats_kills%
-Muertes: %deluxestats_deaths%
 Minerales: %deluxestats_ores%
 Tiempo activo: %deluxestats_playtime%
-Racha actual: %deluxestats_streak%
-Mejor racha: %deluxestats_best_streak%
 Saldo: %deluxestats_money%
 ```
 
@@ -327,6 +284,9 @@ El siguiente ejemplo corresponde a la estructura utilizada por el recurso de con
 
 ```yaml
 settings:
+  # Activa o desactiva los premios automáticos de temporada.
+  enabled: false
+
   # Número de jugadores premiados por categoría.
   top-size: 10
 
@@ -376,28 +336,23 @@ rewards:
 
 DeluxeStats organiza la competición en temporadas de **30 días**.
 
-Las categorías utilizadas para registrar los ganadores de temporada son:
+Las categorías utilizadas para los rankings de temporada son minería (`ores_mined`) y tiempo activo (`active_seconds`).
 
-| Categoría | Identificador interno |
-|---|---|
-| ⚔️ Eliminaciones | `kills` |
-| ⛏️ Minerales extraídos | `ores_mined` |
-| ⏱️ Tiempo activo | `active_seconds` |
-
-Cuando finaliza una temporada, el sistema procesa las clasificaciones, registra a los ganadores y prepara las recompensas configuradas para las posiciones correspondientes.
+Cuando finaliza una temporada, el sistema procesa las clasificaciones y, si `settings.enabled: true`, registra los ganadores y prepara las recompensas configuradas.
 
 Las recompensas pendientes se guardan en la base de datos y pueden entregarse cuando el jugador vuelve a conectarse.
 
 ### 🎁 Cómo funcionan las recompensas
 
+- `settings.enabled` activa (`true`) o desactiva (`false`) por completo la generación y entrega de premios.
 - `settings.top-size` establece cuántos puestos se procesan por categoría.
 - `rewards` contiene la configuración de premios.
-- `kills`, `ores_mined` y `active_seconds` identifican las categorías premiadas.
+- `ores_mined` y `active_seconds` identifican las categorías premiadas.
 - `"1"`, `"2"` y `"3"` representan las posiciones.
 - `commands` contiene los comandos que se ejecutarán para entregar cada premio.
 - `{player}` se sustituye por el nombre del jugador destinatario.
 
-Puedes personalizar los comandos para entregar objetos, dinero u otras recompensas compatibles con los comandos disponibles en tu servidor.
+Puedes personalizar los comandos para entregar objetos, dinero u otras recompensas compatibles con los comandos disponibles en tu servidor. Con `enabled: false`, no se generan ni se entregan recompensas pendientes.
 
 **Recomendación:** haz una copia de seguridad de `seasons.yml` antes de modificarlo. Utiliza una configuración YAML válida para evitar errores al cargar las recompensas.
 

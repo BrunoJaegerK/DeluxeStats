@@ -11,8 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseManager {
 
@@ -106,13 +104,9 @@ public class DatabaseManager {
                     "CREATE TABLE IF NOT EXISTS player_stats ("
                             + "uuid VARCHAR(36) PRIMARY KEY,"
                             + "name VARCHAR(64) NOT NULL,"
-                            + "kills INTEGER NOT NULL DEFAULT 0,"
-                            + "deaths INTEGER NOT NULL DEFAULT 0,"
                             + "ores_mined INTEGER NOT NULL DEFAULT 0,"
                             + "money_earned DOUBLE PRECISION NOT NULL DEFAULT 0,"
                             + "active_seconds BIGINT NOT NULL DEFAULT 0,"
-                            + "current_streak INTEGER NOT NULL DEFAULT 0,"
-                            + "best_streak INTEGER NOT NULL DEFAULT 0"
                             + ")"
             );
 

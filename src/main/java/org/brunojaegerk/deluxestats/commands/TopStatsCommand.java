@@ -18,7 +18,7 @@ public class TopStatsCommand extends Command {
         super(
                 "topstats",
                 "Muestra los mejores jugadores del servidor",
-                "/topstats <ores|playtime>"
+                "/topstats <kills|deaths|ores|playtime>"
         );
         this.plugin = plugin;
     }
@@ -30,7 +30,7 @@ public class TopStatsCommand extends Command {
             String[] args
     ) {
         if (args.length != 1) {
-            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <ores|playtime>");
+            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <kills|deaths|ores|playtime>");
             return true;
         }
         String type = args[0].toLowerCase(java.util.Locale.ROOT);
@@ -40,6 +40,18 @@ public class TopStatsCommand extends Command {
         String valueLabel;
 
         switch (type) {
+            case "kills":
+                column = "kills";
+                title = "Más asesinatos";
+                valueLabel = "asesinatos";
+                break;
+
+            case "deaths":
+                column = "deaths";
+                title = "Más muertes";
+                valueLabel = "muertes";
+                break;
+
             case "ores":
                 column = "ores_mined";
                 title = "Más minerales extraídos";
@@ -54,7 +66,7 @@ public class TopStatsCommand extends Command {
 
             default:
                 sender.sendMessage("§b§lDeluxeStats §8» §cCategoría desconocida.");
-                sender.sendMessage("§7Categorías: §aores, playtime");
+                sender.sendMessage("§7Categorías: §akills, deaths, ores, playtime");
                 return true;
         }
 

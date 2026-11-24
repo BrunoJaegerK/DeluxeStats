@@ -3,7 +3,6 @@ package org.brunojaegerk.deluxestats;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.event.Listener;
 import cn.nukkit.plugin.PluginBase;
 
 import me.onebone.economyapi.EconomyAPI;
@@ -17,7 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
-public class DeluxeStats extends PluginBase implements Listener {
+public class DeluxeStats extends PluginBase {
 
     private DatabaseManager databaseManager;
     private StatsListener statsListener;
@@ -32,9 +31,6 @@ public class DeluxeStats extends PluginBase implements Listener {
         try {
             // Abrir la base de datos existente sin borrar estadísticas.
             databaseManager.open();
-
-            // Registrar los eventos de esta clase.
-            getServer().getPluginManager().registerEvents(this, this);
 
             // Registrar y mantener el seguimiento de estadísticas.
             statsListener = new StatsListener(this);
@@ -60,7 +56,7 @@ public class DeluxeStats extends PluginBase implements Listener {
                     "Estadisticas de mineria, saldo y tiempo de juego activadas."
             );
 
-} catch (SQLException exception) {
+        } catch (SQLException exception) {
             getLogger().error(
                     "No se pudo inicializar la base de datos H2.",
                     exception
@@ -100,7 +96,7 @@ public class DeluxeStats extends PluginBase implements Listener {
      * Limpia los componentes inicializados si falla el arranque.
      */
     private void cleanupAfterInitializationFailure() {
-if (statsListener != null) {
+        if (statsListener != null) {
             statsListener.shutdownPlaytimeTracker();
             statsListener = null;
         }

@@ -182,6 +182,10 @@ public class TopStatsCommand extends Command {
             connection.commit();
             connection.setAutoCommit(previousAutoCommit);
 
+            if (plugin.getStatsListener() != null) {
+                plugin.getStatsListener().resetPlaytimeTracking();
+            }
+
             if (plugin.getPlaceholderManager() != null) {
                 plugin.getPlaceholderManager().invalidateTopCache();
             }

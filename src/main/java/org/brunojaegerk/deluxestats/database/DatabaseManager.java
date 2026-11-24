@@ -106,7 +106,7 @@ public class DatabaseManager {
                             + "name VARCHAR(64) NOT NULL,"
                             + "ores_mined INTEGER NOT NULL DEFAULT 0,"
                             + "money_earned DOUBLE PRECISION NOT NULL DEFAULT 0,"
-                            + "active_seconds BIGINT NOT NULL DEFAULT 0,"
+                            + "active_seconds BIGINT NOT NULL DEFAULT 0"
                             + ")"
             );
 

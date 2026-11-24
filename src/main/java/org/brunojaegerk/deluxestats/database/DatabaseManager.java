@@ -104,12 +104,23 @@ public class DatabaseManager {
                     "CREATE TABLE IF NOT EXISTS player_stats ("
                             + "uuid VARCHAR(36) PRIMARY KEY,"
                             + "name VARCHAR(64) NOT NULL,"
+                            + "kills INTEGER NOT NULL DEFAULT 0,"
+                            + "deaths INTEGER NOT NULL DEFAULT 0,"
                             + "ores_mined INTEGER NOT NULL DEFAULT 0,"
                             + "money_earned DOUBLE PRECISION NOT NULL DEFAULT 0,"
                             + "active_seconds BIGINT NOT NULL DEFAULT 0"
                             + ")"
             );
 
+            // Añade las estadísticas PvP simples en bases de datos existentes.
+            statement.executeUpdate(
+                    "ALTER TABLE player_stats ADD COLUMN IF NOT EXISTS "
+                            + "kills INTEGER NOT NULL DEFAULT 0"
+            );
+            statement.executeUpdate(
+                    "ALTER TABLE player_stats ADD COLUMN IF NOT EXISTS "
+                            + "deaths INTEGER NOT NULL DEFAULT 0"
+            );
         }
 
         plugin.getLogger().info(
@@ -172,6 +183,26 @@ public class DatabaseManager {
                     insert.executeUpdate();
                 }
             }
+        }
+    }
+
+    public synchronized void recordKill(Player player)
+            throws SQLException {
+        ensurePlayer(player);
+        String sql = "UPDATE player_stats SET kills = kills + 1 WHERE uuid = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, player.getUniqueId().toString());
+            statement.executeUpdate();
+        }
+    }
+
+    public synchronized void recordDeath(Player player)
+            throws SQLException {
+        ensurePlayer(player);
+        String sql = "UPDATE player_stats SET deaths = deaths + 1 WHERE uuid = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, player.getUniqueId().toString());
+            statement.executeUpdate();
         }
     }
 

@@ -3,17 +3,13 @@ package org.brunojaegerk.deluxestats;
 import cn.nukkit.Player;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
-import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.plugin.PluginBase;
 
 import me.onebone.economyapi.EconomyAPI;
 
 import org.brunojaegerk.deluxestats.commands.TopStatsCommand;
 import org.brunojaegerk.deluxestats.database.DatabaseManager;
-import org.brunojaegerk.deluxestats.season.SeasonManager;
-import org.brunojaegerk.deluxestats.season.SeasonRewardManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,8 +22,6 @@ public class DeluxeStats extends PluginBase implements Listener {
     private DatabaseManager databaseManager;
     private StatsListener statsListener;
     private PlaceholderManager placeholderManager;
-    private SeasonManager seasonManager;
-    private SeasonRewardManager seasonRewardManager;
 
     @Override
     public void onEnable() {
@@ -38,12 +32,6 @@ public class DeluxeStats extends PluginBase implements Listener {
         try {
             // Abrir la base de datos existente sin borrar estadísticas.
             databaseManager.open();
-
-            // Inicializar recompensas antes de iniciar las temporadas.
-            seasonRewardManager = new SeasonRewardManager(
-                    this,
-                    databaseManager
-            );
 
             // Registrar los eventos de esta clase.
             getServer().getPluginManager().registerEvents(this, this);
@@ -57,18 +45,6 @@ public class DeluxeStats extends PluginBase implements Listener {
             );
 
             statsListener.startPlaytimeTracker();
-
-            // Iniciar el administrador de temporadas con recompensas.
-            seasonManager = new SeasonManager(
-                    this,
-                    databaseManager,
-                    seasonRewardManager
-            );
-
-            seasonManager.start();
-
-            // Entregar recompensas pendientes a jugadores conectados.
-            seasonRewardManager.deliverPendingRewardsToOnlinePlayers();
 
             // Registrar el comando de clasificaciones existente.
             getServer().getCommandMap().register(
@@ -84,11 +60,7 @@ public class DeluxeStats extends PluginBase implements Listener {
                     "Estadisticas de mineria, saldo y tiempo de juego activadas."
             );
 
-            getLogger().info(
-                    "Sistema de temporadas de 30 dias iniciado."
-            );
-
-        } catch (SQLException exception) {
+} catch (SQLException exception) {
             getLogger().error(
                     "No se pudo inicializar la base de datos H2.",
                     exception
@@ -125,27 +97,10 @@ public class DeluxeStats extends PluginBase implements Listener {
     }
 
     /**
-     * Entrega las recompensas pendientes cuando un jugador entra.
-     */
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        if (seasonRewardManager == null) {
-            return;
-        }
-
-        seasonRewardManager.deliverPendingRewards(event.getPlayer());
-    }
-
-    /**
      * Limpia los componentes inicializados si falla el arranque.
      */
     private void cleanupAfterInitializationFailure() {
-        if (seasonManager != null) {
-            seasonManager.stop();
-            seasonManager = null;
-        }
-
-        if (statsListener != null) {
+if (statsListener != null) {
             statsListener.shutdownPlaytimeTracker();
             statsListener = null;
         }
@@ -298,12 +253,7 @@ public class DeluxeStats extends PluginBase implements Listener {
 
     @Override
     public void onDisable() {
-        // Detener las comprobaciones de temporadas primero.
-        if (seasonManager != null) {
-            seasonManager.stop();
-        }
-
-        // Guardar el tiempo pendiente antes de cerrar H2.
+// Guardar el tiempo pendiente antes de cerrar H2.
         if (statsListener != null) {
             statsListener.shutdownPlaytimeTracker();
         }
@@ -325,14 +275,6 @@ public class DeluxeStats extends PluginBase implements Listener {
 
     public PlaceholderManager getPlaceholderManager() {
         return placeholderManager;
-    }
-
-    public SeasonManager getSeasonManager() {
-        return seasonManager;
-    }
-
-    public SeasonRewardManager getSeasonRewardManager() {
-        return seasonRewardManager;
     }
 
 }

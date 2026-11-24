@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class TopStatsCommand extends Command {
 
@@ -29,11 +30,14 @@ public class TopStatsCommand extends Command {
             String[] args
     ) {
         if (args.length != 1) {
-            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <kills|deaths|ores|playtime|streak>");
+            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <ores|playtime|reset>");
             return true;
         }
 
         String type = args[0].toLowerCase(java.util.Locale.ROOT);
+        if ("reset".equals(type)) {
+            return resetSeasonAndTops(sender);
+        }
 
         String column;
         String title;
@@ -115,6 +119,89 @@ public class TopStatsCommand extends Command {
         sender.sendMessage(" ");
         sender.sendMessage("§8§m--------------------------------");
         return true;
+    }
+
+
+    /**
+     * Reinicia los tops generales de minería/tiempo y crea una temporada
+     * nueva sin procesar premios. Las temporadas cerradas y sus resultados
+     * históricos se conservan.
+     */
+    private boolean resetSeasonAndTops(CommandSender sender) {
+        if (!sender.isOp()) {
+            sender.sendMessage("§cNo tienes permiso para reiniciar los tops.");
+            return true;
+        }
+
+        Connection connection = null;
+        boolean previousAutoCommit = true;
+
+        try {
+            connection = plugin.getDatabaseManager().getConnection();
+            if (connection == null || connection.isClosed()) {
+                sender.sendMessage("§cLa base de datos no está disponible.");
+                return true;
+            }
+
+            previousAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+
+            long now = System.currentTimeMillis();
+            long end = now + 30L * 24L * 60L * 60L * 1000L;
+
+            try (PreparedStatement close = connection.prepareStatement(
+                    "UPDATE seasons SET status = 'CLOSED', closed_at = ? "
+                            + "WHERE status = 'ACTIVE'")) {
+                close.setLong(1, now);
+                close.executeUpdate();
+            }
+
+            try (PreparedStatement create = connection.prepareStatement(
+                    "INSERT INTO seasons (start_time, end_time, status) "
+                            + "VALUES (?, ?, 'ACTIVE')")) {
+                create.setLong(1, now);
+                create.setLong(2, end);
+                create.executeUpdate();
+            }
+
+            try (Statement reset = connection.createStatement()) {
+                reset.executeUpdate(
+                        "UPDATE player_stats SET ores_mined = 0, active_seconds = 0"
+                );
+            }
+
+            connection.commit();
+            connection.setAutoCommit(previousAutoCommit);
+
+            if (plugin.getPlaceholderManager() != null) {
+                plugin.getPlaceholderManager().invalidateTopCache();
+            }
+
+            sender.sendMessage("§aLos tops de minería y tiempo se reiniciaron.");
+            sender.sendMessage("§aSe inició una nueva temporada de 30 días.");
+            sender.sendMessage("§7El historial de temporadas anteriores se conservó.");
+            return true;
+
+        } catch (SQLException exception) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                    connection.setAutoCommit(previousAutoCommit);
+                } catch (SQLException rollbackException) {
+                    plugin.getLogger().error(
+                            "No se pudo revertir el reinicio de temporada.",
+                            rollbackException
+                    );
+                }
+            }
+
+            plugin.getLogger().error(
+                    "Error reiniciando los tops y la temporada.",
+                    exception
+            );
+            sender.sendMessage("§cNo se pudo reiniciar la temporada. Revisa la consola.");
+            return true;
+        }
     }
 
     private String formatPlaytime(long totalSeconds) {

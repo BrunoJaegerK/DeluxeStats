@@ -2,13 +2,10 @@ package org.brunojaegerk.deluxestats;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.player.PlayerChatEvent;
-import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerMoveEvent;
@@ -202,62 +199,6 @@ public class StatsListener implements Listener {
         } catch (SQLException exception) {
             plugin.getLogger().error(
                     "Error al guardar los minerales extraídos.",
-                    exception
-            );
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Player victim = (Player) event.getEntity();
-
-        try {
-            deluxeStats.getDatabaseManager().recordDeath(victim);
-
-            Entity lastDamage =
-                    victim.getLastDamageCause()
-                            instanceof EntityDamageByEntityEvent
-                            ? ((EntityDamageByEntityEvent)
-                            victim.getLastDamageCause()).getDamager()
-                            : null;
-
-            if (lastDamage instanceof Player) {
-                Player killer = (Player) lastDamage;
-
-                if (!killer.getUniqueId().equals(victim.getUniqueId())) {
-
-                    long remaining =
-                            deluxeStats.getKillAntiFarmManager()
-                                    .getRemainingCooldownMillis(killer, victim);
-
-                    if (remaining == 0L) {
-
-                        // La kill está permitida.
-                        deluxeStats.getDatabaseManager().recordKill(killer);
-                        markActivity(killer);
-
-                    } else {
-
-                        // Mostrar el tiempo restante sin reiniciar el bloqueo.
-                        long totalSeconds = (remaining + 999L) / 1000L;
-                        long minutes = totalSeconds / 60L;
-                        long seconds = totalSeconds % 60L;
-
-                        killer.sendMessage(
-                                "§c[DeluxeStats] §fTu kill contra §e"
-                                        + victim.getName()
-                                        + " §fno sumará estadísticas durante §e"
-                                        + minutes + "m "
-                                        + seconds + "s"
-                                        + " §f más."
-                        );
-                    }
-                }
-            }
-
-        } catch (SQLException exception) {
-            plugin.getLogger().error(
-                    "Error al guardar las estadísticas PvP.",
                     exception
             );
         }

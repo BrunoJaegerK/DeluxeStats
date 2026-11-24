@@ -14,7 +14,6 @@ import org.brunojaegerk.deluxestats.commands.TopStatsCommand;
 import org.brunojaegerk.deluxestats.database.DatabaseManager;
 import org.brunojaegerk.deluxestats.season.SeasonManager;
 import org.brunojaegerk.deluxestats.season.SeasonRewardManager;
-import org.brunojaegerk.deluxestats.antifarm.KillAntiFarmManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,14 +28,12 @@ public class DeluxeStats extends PluginBase implements Listener {
     private PlaceholderManager placeholderManager;
     private SeasonManager seasonManager;
     private SeasonRewardManager seasonRewardManager;
-    private KillAntiFarmManager killAntiFarmManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
         databaseManager = new DatabaseManager(this);
-        killAntiFarmManager = new KillAntiFarmManager(this);
 
         try {
             // Abrir la base de datos existente sin borrar estadísticas.
@@ -84,7 +81,7 @@ public class DeluxeStats extends PluginBase implements Listener {
             );
 
             getLogger().info(
-                    "Estadisticas PvP, mineria, saldo y tiempo de juego activadas."
+                    "Estadisticas de mineria, saldo y tiempo de juego activadas."
             );
 
             getLogger().info(
@@ -204,8 +201,7 @@ public class DeluxeStats extends PluginBase implements Listener {
             databaseManager.updateMoneyBalance(player, balance);
 
             String sql =
-                    "SELECT kills, deaths, ores_mined, money_earned, "
-                            + "current_streak, best_streak, active_seconds "
+                    "SELECT ores_mined, money_earned, active_seconds "
                             + "FROM player_stats WHERE uuid = ?";
 
             Connection connection = databaseManager.getConnection();
@@ -250,16 +246,6 @@ public class DeluxeStats extends PluginBase implements Listener {
                     player.sendMessage("§8§m------------------------");
 
                     player.sendMessage(
-                            "§c⚔ §fAsesinatos: §a"
-                                    + result.getInt("kills")
-                    );
-
-                    player.sendMessage(
-                            "§c☠ §fMuertes: §a"
-                                    + result.getInt("deaths")
-                    );
-
-                    player.sendMessage(
                             "§e⛏ §fMinerales picados: §a"
                                     + result.getInt("ores_mined")
                     );
@@ -267,16 +253,6 @@ public class DeluxeStats extends PluginBase implements Listener {
                     player.sendMessage(
                             "§a$ §fSaldo actual: §e"
                                     + formattedBalance
-                    );
-
-                    player.sendMessage(
-                            "§6🔥 §fRacha actual: §a"
-                                    + result.getInt("current_streak")
-                    );
-
-                    player.sendMessage(
-                            "§6🏆 §fMejor racha: §a"
-                                    + result.getInt("best_streak")
                     );
 
                     player.sendMessage(
@@ -349,10 +325,6 @@ public class DeluxeStats extends PluginBase implements Listener {
 
     public SeasonRewardManager getSeasonRewardManager() {
         return seasonRewardManager;
-    }
-
-    public KillAntiFarmManager getKillAntiFarmManager() {
-        return killAntiFarmManager;
     }
 
 }

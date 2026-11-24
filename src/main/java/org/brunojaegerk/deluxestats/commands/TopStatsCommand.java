@@ -18,7 +18,7 @@ public class TopStatsCommand extends Command {
         super(
                 "topstats",
                 "Muestra los mejores jugadores del servidor",
-                "/topstats <ores|playtime|reset>"
+                "/topstats <ores|playtime>"
         );
         this.plugin = plugin;
     }
@@ -29,24 +29,11 @@ public class TopStatsCommand extends Command {
             String commandLabel,
             String[] args
     ) {
-        if (args.length < 1 || args.length > 2) {
-            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <ores|playtime|reset confirm>");
-            return true;
-        }
-
-        String type = args[0].toLowerCase(java.util.Locale.ROOT);
-        if ("reset".equals(type)) {
-            if (args.length != 2 || !"confirm".equalsIgnoreCase(args[1])) {
-                sender.sendMessage("§cEsto reiniciará los tops de minería/tiempo y abrirá una nueva temporada.");
-                sender.sendMessage("§eEscribe §f/topstats reset confirm §epara continuar.");
-                return true;
-            }
-            return resetSeasonAndTops(sender);
-        }
         if (args.length != 1) {
-            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <ores|playtime|reset confirm>");
+            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <ores|playtime>");
             return true;
         }
+        String type = args[0].toLowerCase(java.util.Locale.ROOT);
 
         String column;
         String title;
@@ -67,7 +54,7 @@ public class TopStatsCommand extends Command {
 
             default:
                 sender.sendMessage("§b§lDeluxeStats §8» §cCategoría desconocida.");
-                sender.sendMessage("§7Categorías: §aores, playtime, reset");
+                sender.sendMessage("§7Categorías: §aores, playtime");
                 return true;
         }
 

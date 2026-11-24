@@ -8,16 +8,6 @@ settings:
   reward-message: "§a¡Has recibido una recompensa de temporada!"
 
 rewards:
-  kills:
-    "1":
-      commands:
-        - "give {player} diamond 10"
-    "2":
-      commands:
-        - "give {player} diamond 5"
-    "3":
-      commands:
-        - "give {player} diamond 3"
 
   ores_mined:
     "1":

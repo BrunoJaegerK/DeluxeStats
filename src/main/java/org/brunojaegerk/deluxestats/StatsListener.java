@@ -239,6 +239,19 @@ public class StatsListener implements Listener {
         }
     }
 
+    /**
+     * Descarta el tiempo pendiente previo a un reinicio de tops y establece
+     * una nueva referencia para las sesiones que siguen conectadas.
+     */
+    public void resetPlaytimeTracking() {
+        long now = System.currentTimeMillis();
+        for (Session session : sessions.values()) {
+            session.lastActivityMillis = now;
+            session.lastSampleMillis = now;
+            session.pendingMillis = 0L;
+        }
+    }
+
     public void shutdownPlaytimeTracker() {
         long now = System.currentTimeMillis();
 

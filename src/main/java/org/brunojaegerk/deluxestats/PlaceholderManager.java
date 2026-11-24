@@ -37,25 +37,16 @@ public class PlaceholderManager {
         registerStat(api, "deluxestats_deaths", "deaths");
         registerStat(api, "deluxestats_ores", "ores_mined");
         registerStat(api, "deluxestats_playtime", "active_seconds");
-        registerStat(api, "deluxestats_streak", "current_streak");
-        registerStat(api, "deluxestats_best_streak", "best_streak");
 
         // Rankings globales
         registerTopPlaceholders(api, "kills", "kills");
         registerTopPlaceholders(api, "deaths", "deaths");
         registerTopPlaceholders(api, "ores", "ores_mined");
         registerTopPlaceholders(api, "playtime", "active_seconds");
-        registerTopPlaceholders(api, "streak", "current_streak");
-        registerTopPlaceholders(api, "best_streak", "best_streak");
 
         // Saldo personal de EconomyAPI
         api.builder("deluxestats_money", String.class)
                 .visitorLoader(entry -> getMoney(entry.getPlayer()))
-                .build();
-
-        // Días restantes de la temporada actual.
-        api.builder("deluxestats_season_days_left", String.class)
-                .loader(entry -> getSeasonDaysLeft())
                 .build();
 
         plugin.getLogger().info(
@@ -144,6 +135,10 @@ public class PlaceholderManager {
         return String.valueOf(entry.value);
     }
 
+    public synchronized void invalidateTopCache() {
+        topCache.clear();
+    }
+
     private synchronized List<TopEntry> getTopEntries(
             String metric,
             String column
@@ -162,8 +157,6 @@ public class PlaceholderManager {
             case "deaths":
             case "ores_mined":
             case "active_seconds":
-            case "current_streak":
-            case "best_streak":
                 break;
             default:
                 return new ArrayList<>();
@@ -236,8 +229,6 @@ public class PlaceholderManager {
             case "deaths":
             case "ores_mined":
             case "active_seconds":
-            case "current_streak":
-            case "best_streak":
                 break;
             default:
                 return 0L;
@@ -340,43 +331,4 @@ public class PlaceholderManager {
         }
     }
 
-    private String getSeasonDaysLeft() {
-
-        try {
-            Integer seasonId =
-                    plugin.getDatabaseManager().getCurrentSeasonId();
-
-            if (seasonId == null) {
-                return "Sin temporada";
-            }
-
-            long endTime =
-                    plugin.getDatabaseManager().getSeasonEndTime(seasonId);
-
-            long remaining = endTime - System.currentTimeMillis();
-
-            if (remaining <= 0L) {
-                return "0";
-            }
-
-            long days = remaining / 86_400_000L;
-
-            // Si queda menos de un día, mostrar 1.
-            if (days == 0L) {
-                days = 1L;
-            }
-
-            return String.valueOf(days);
-
-        } catch (SQLException exception) {
-            plugin.getLogger().error(
-                    "Error obteniendo los días restantes de la temporada.",
-                    exception
-            );
-
-            return "-";
-        }
-    }
 }
-
-

@@ -4,7 +4,7 @@ version: "1.0.0"
 api: ["1.0.0"]
 softdepend: [EconomyAPI, PlaceholderAPI]
 author: BrunoJaegerK
-description: Estadisticas, rankings y temporadas para DeluxeMine
+description: Estadisticas y rankings para DeluxeMine
 
 commands:
   stats:

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class TopStatsCommand extends Command {
 
@@ -17,7 +18,7 @@ public class TopStatsCommand extends Command {
         super(
                 "topstats",
                 "Muestra los mejores jugadores del servidor",
-                "/topstats <kills|deaths|ores|playtime|streak>"
+                "/topstats <kills|deaths|ores|playtime>"
         );
         this.plugin = plugin;
     }
@@ -29,10 +30,9 @@ public class TopStatsCommand extends Command {
             String[] args
     ) {
         if (args.length != 1) {
-            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <kills|deaths|ores|playtime|streak>");
+            sender.sendMessage("§b§lDeluxeStats §8» §fUso: §a/topstats <kills|deaths|ores|playtime>");
             return true;
         }
-
         String type = args[0].toLowerCase(java.util.Locale.ROOT);
 
         String column;
@@ -64,15 +64,9 @@ public class TopStatsCommand extends Command {
                 valueLabel = "tiempo activo";
                 break;
 
-            case "streak":
-                column = "best_streak";
-                title = "Mejores rachas";
-                valueLabel = "racha";
-                break;
-
             default:
                 sender.sendMessage("§b§lDeluxeStats §8» §cCategoría desconocida.");
-                sender.sendMessage("§7Categorías: §akills, deaths, ores, playtime, streak");
+                sender.sendMessage("§7Categorías: §akills, deaths, ores, playtime");
                 return true;
         }
 
@@ -134,6 +128,7 @@ public class TopStatsCommand extends Command {
         sender.sendMessage("§8§m--------------------------------");
         return true;
     }
+
 
     private String formatPlaytime(long totalSeconds) {
         if (totalSeconds < 0L) {

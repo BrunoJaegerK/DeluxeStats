@@ -2,7 +2,6 @@ package org.brunojaegerk.deluxestats;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.entity.Entity;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
@@ -141,11 +140,6 @@ public class StatsListener implements Listener {
             );
         }
 
-        // Recuperar las recompensas pendientes al volver a conectarse.
-        if (deluxeStats.getSeasonRewardManager() != null) {
-            deluxeStats.getSeasonRewardManager()
-                    .deliverPendingRewards(player);
-        }
     }
 
     @EventHandler
@@ -210,54 +204,23 @@ public class StatsListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = (Player) event.getEntity();
-
         try {
             deluxeStats.getDatabaseManager().recordDeath(victim);
-
-            Entity lastDamage =
-                    victim.getLastDamageCause()
-                            instanceof EntityDamageByEntityEvent
-                            ? ((EntityDamageByEntityEvent)
-                            victim.getLastDamageCause()).getDamager()
-                            : null;
-
-            if (lastDamage instanceof Player) {
-                Player killer = (Player) lastDamage;
-
-                if (!killer.getUniqueId().equals(victim.getUniqueId())) {
-
-                    long remaining =
-                            deluxeStats.getKillAntiFarmManager()
-                                    .getRemainingCooldownMillis(killer, victim);
-
-                    if (remaining == 0L) {
-
-                        // La kill está permitida.
+            if (victim.getLastDamageCause()
+                    instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent damage =
+                        (EntityDamageByEntityEvent) victim.getLastDamageCause();
+                if (damage.getDamager() instanceof Player) {
+                    Player killer = (Player) damage.getDamager();
+                    if (!killer.getUniqueId().equals(victim.getUniqueId())) {
                         deluxeStats.getDatabaseManager().recordKill(killer);
                         markActivity(killer);
-
-                    } else {
-
-                        // Mostrar el tiempo restante sin reiniciar el bloqueo.
-                        long totalSeconds = (remaining + 999L) / 1000L;
-                        long minutes = totalSeconds / 60L;
-                        long seconds = totalSeconds % 60L;
-
-                        killer.sendMessage(
-                                "§c[DeluxeStats] §fTu kill contra §e"
-                                        + victim.getName()
-                                        + " §fno sumará estadísticas durante §e"
-                                        + minutes + "m "
-                                        + seconds + "s"
-                                        + " §f más."
-                        );
                     }
                 }
             }
-
         } catch (SQLException exception) {
             plugin.getLogger().error(
-                    "Error al guardar las estadísticas PvP.",
+                    "Error al guardar las estadísticas de kills y muertes.",
                     exception
             );
         }

@@ -118,11 +118,6 @@ public class TopStatsCommand extends Command {
     }
 
 
-    /**
-     * Reinicia los tops generales de minería/tiempo y crea una temporada
-     * nueva sin procesar premios. Las temporadas cerradas y sus resultados
-     * históricos se conservan.
-     */
     private String formatPlaytime(long totalSeconds) {
         if (totalSeconds < 0L) {
             totalSeconds = 0L;

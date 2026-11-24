@@ -110,7 +110,7 @@ Al iniciar, DeluxeStats inicializa la base de datos y crea la configuración de 
 | `/stats` | Consulta las estadísticas personales. |
 | `/topstats ores` | Muestra el TOP 10 de minerales extraídos. |
 | `/topstats playtime` | Muestra el TOP 10 de tiempo activo. |
-| `/topstats reset` | Reinicia los tops de minería/tiempo e inicia una temporada nueva (solo operadores). |
+| `/topstats reset confirm` | Reinicia los tops de minería/tiempo e inicia una temporada nueva (solo operadores). |
 
 ### Ejemplos
 

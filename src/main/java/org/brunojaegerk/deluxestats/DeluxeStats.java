@@ -319,6 +319,10 @@ public class DeluxeStats extends PluginBase implements Listener {
         return databaseManager;
     }
 
+    public PlaceholderManager getPlaceholderManager() {
+        return placeholderManager;
+    }
+
     public SeasonManager getSeasonManager() {
         return seasonManager;
     }

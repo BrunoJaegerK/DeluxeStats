@@ -132,7 +132,7 @@ Consultar quiénes tienen más tiempo activo:
 /topstats playtime
 ```
 
-**Nota:** el comando `/topstats streak` ordena por `best_streak`, es decir, por la mejor racha registrada. Los rankings de este comando muestran hasta 10 jugadores.
+Los rankings de este comando muestran hasta 10 jugadores.
 
 ---
 
@@ -195,18 +195,6 @@ Sustituye `<posición>` por un número del 1 al tamaño configurado en `rankings
 | ⏱️ Tiempo activo | `%deluxestats_top_playtime_<posición>_name%` | `%deluxestats_top_playtime_<posición>_value%` |
 
 ### 💡 Ejemplos de uso
-
-**Mostrar al jugador con más eliminaciones:**
-
-```text
-%deluxestats_top_kills_1_name%
-```
-
-**Mostrar sus eliminaciones:**
-
-```text
-%deluxestats_top_kills_1_value%
-```
 
 **Mostrar el jugador que más minerales ha extraído:**
 
@@ -294,17 +282,6 @@ settings:
   reward-message: "§a¡Has recibido una recompensa de temporada!"
 
 rewards:
-  kills:
-    "1":
-      commands:
-        - "give {player} diamond 10"
-    "2":
-      commands:
-        - "give {player} diamond 5"
-    "3":
-      commands:
-        - "give {player} diamond 3"
-
   ores_mined:
     "1":
       commands:

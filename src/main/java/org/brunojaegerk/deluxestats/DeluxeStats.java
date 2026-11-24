@@ -319,6 +319,10 @@ public class DeluxeStats extends PluginBase implements Listener {
         return databaseManager;
     }
 
+    public StatsListener getStatsListener() {
+        return statsListener;
+    }
+
     public PlaceholderManager getPlaceholderManager() {
         return placeholderManager;
     }

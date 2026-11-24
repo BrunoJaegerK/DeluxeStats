@@ -1,4 +1,6 @@
 settings:
+  # Activa o desactiva por completo los premios automáticos de temporada.
+  enabled: false
   # Número de jugadores premiados por categoría.
   top-size: 10
 

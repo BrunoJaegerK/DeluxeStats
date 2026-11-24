@@ -2,12 +2,13 @@
 
 **Plugin de estadísticas y rankings para servidores Minecraft Bedrock con Nukkit.**
 
-DeluxeStats registra estadísticas generales de los jugadores y permite consultar datos personales y rankings globales. No incluye temporadas, premios competitivos ni sistemas de kills o antifarmeo.
+DeluxeStats registra estadísticas generales de los jugadores y permite consultar datos personales y rankings globales. No incluye temporadas, premios competitivos ni sistemas antifarmeo. Incluye rankings de kills y muertes sin restricciones artificiales.
 
 ## ✨ Características
 - ⛏️ Registro de minerales extraídos.
 - ⏱️ Seguimiento del tiempo de juego activo con detección de inactividad.
 - 💰 Consulta del saldo actual mediante EconomyAPI.
+- ⚔️ Registro y rankings de kills y muertes.
 - 🏆 Rankings globales de minería y tiempo activo.
 - 🔌 Placeholders personales y TOP para PlaceholderAPI.
 - 💾 Almacenamiento persistente mediante H2.
@@ -31,12 +32,16 @@ La base de datos se crea en `plugins/DeluxeStats/deluxestats.mv.db`. Para actual
 | Comando | Descripción |
 |---|---|
 | `/stats` | Muestra tus estadísticas personales. |
+| `/topstats kills` | Muestra el TOP 10 de asesinatos. |
+| `/topstats deaths` | Muestra el TOP 10 de muertes. |
 | `/topstats ores` | Muestra el TOP 10 de minerales extraídos. |
 | `/topstats playtime` | Muestra el TOP 10 de tiempo activo. |
 
 ## 📊 Estadísticas
 | Estadística | Descripción |
 |---|---|
+| `kills` | Asesinatos de jugadores registrados. |
+| `deaths` | Muertes de jugadores registradas. |
 | `ores_mined` | Minerales extraídos registrados. |
 | `active_seconds` | Tiempo de juego activo acumulado. |
 | `money_earned` | Saldo consultado y almacenado desde EconomyAPI. |
@@ -60,9 +65,15 @@ Se registran únicamente si PlaceholderAPI está instalado.
 
 | Placeholder | Descripción |
 |---|---|
+| `%deluxestats_kills%` | Kills personales. |
+| `%deluxestats_deaths%` | Muertes personales. |
 | `%deluxestats_ores%` | Minerales extraídos. |
 | `%deluxestats_playtime%` | Tiempo activo formateado. |
 | `%deluxestats_money%` | Saldo actual de EconomyAPI. |
+| `%deluxestats_top_kills_<posición>_name%` | Nombre en el TOP de kills. |
+| `%deluxestats_top_kills_<posición>_value%` | Valor en el TOP de kills. |
+| `%deluxestats_top_deaths_<posición>_name%` | Nombre en el TOP de muertes. |
+| `%deluxestats_top_deaths_<posición>_value%` | Valor en el TOP de muertes. |
 | `%deluxestats_top_ores_<posición>_name%` | Nombre en el TOP de minería. |
 | `%deluxestats_top_ores_<posición>_value%` | Valor en el TOP de minería. |
 | `%deluxestats_top_playtime_<posición>_name%` | Nombre en el TOP de tiempo activo. |

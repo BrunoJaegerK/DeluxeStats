@@ -33,20 +33,12 @@ public class PlaceholderManager {
         loadRankingConfig();
 
         // Estadísticas personales
-        registerStat(api, "deluxestats_kills", "kills");
-        registerStat(api, "deluxestats_deaths", "deaths");
         registerStat(api, "deluxestats_ores", "ores_mined");
         registerStat(api, "deluxestats_playtime", "active_seconds");
-        registerStat(api, "deluxestats_streak", "current_streak");
-        registerStat(api, "deluxestats_best_streak", "best_streak");
 
         // Rankings globales
-        registerTopPlaceholders(api, "kills", "kills");
-        registerTopPlaceholders(api, "deaths", "deaths");
         registerTopPlaceholders(api, "ores", "ores_mined");
         registerTopPlaceholders(api, "playtime", "active_seconds");
-        registerTopPlaceholders(api, "streak", "current_streak");
-        registerTopPlaceholders(api, "best_streak", "best_streak");
 
         // Saldo personal de EconomyAPI
         api.builder("deluxestats_money", String.class)
@@ -144,6 +136,10 @@ public class PlaceholderManager {
         return String.valueOf(entry.value);
     }
 
+    public synchronized void invalidateTopCache() {
+        topCache.clear();
+    }
+
     private synchronized List<TopEntry> getTopEntries(
             String metric,
             String column
@@ -158,12 +154,8 @@ public class PlaceholderManager {
 
         // Solo permitir las columnas conocidas del plugin.
         switch (column) {
-            case "kills":
-            case "deaths":
             case "ores_mined":
             case "active_seconds":
-            case "current_streak":
-            case "best_streak":
                 break;
             default:
                 return new ArrayList<>();

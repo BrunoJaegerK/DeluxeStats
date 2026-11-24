@@ -17,7 +17,7 @@ public class TopStatsCommand extends Command {
         super(
                 "topstats",
                 "Muestra los mejores jugadores del servidor",
-                "/topstats <kills|deaths|ores|playtime|streak>"
+                "/topstats <ores|playtime|reset>"
         );
         this.plugin = plugin;
     }
@@ -40,18 +40,6 @@ public class TopStatsCommand extends Command {
         String valueLabel;
 
         switch (type) {
-            case "kills":
-                column = "kills";
-                title = "Más asesinatos";
-                valueLabel = "asesinatos";
-                break;
-
-            case "deaths":
-                column = "deaths";
-                title = "Más muertes";
-                valueLabel = "muertes";
-                break;
-
             case "ores":
                 column = "ores_mined";
                 title = "Más minerales extraídos";
@@ -64,15 +52,9 @@ public class TopStatsCommand extends Command {
                 valueLabel = "tiempo activo";
                 break;
 
-            case "streak":
-                column = "best_streak";
-                title = "Mejores rachas";
-                valueLabel = "racha";
-                break;
-
             default:
                 sender.sendMessage("§b§lDeluxeStats §8» §cCategoría desconocida.");
-                sender.sendMessage("§7Categorías: §akills, deaths, ores, playtime, streak");
+                sender.sendMessage("§7Categorías: §aores, playtime, reset");
                 return true;
         }
 

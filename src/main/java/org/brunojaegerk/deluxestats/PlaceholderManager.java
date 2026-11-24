@@ -224,12 +224,8 @@ public class PlaceholderManager {
 
     private long getStat(Player player, String column) {
         switch (column) {
-            case "kills":
-            case "deaths":
             case "ores_mined":
             case "active_seconds":
-            case "current_streak":
-            case "best_streak":
                 break;
             default:
                 return 0L;

@@ -33,10 +33,14 @@ public class PlaceholderManager {
         loadRankingConfig();
 
         // Estadísticas personales
+        registerStat(api, "deluxestats_kills", "kills");
+        registerStat(api, "deluxestats_deaths", "deaths");
         registerStat(api, "deluxestats_ores", "ores_mined");
         registerStat(api, "deluxestats_playtime", "active_seconds");
 
         // Rankings globales
+        registerTopPlaceholders(api, "kills", "kills");
+        registerTopPlaceholders(api, "deaths", "deaths");
         registerTopPlaceholders(api, "ores", "ores_mined");
         registerTopPlaceholders(api, "playtime", "active_seconds");
 
@@ -149,6 +153,8 @@ public class PlaceholderManager {
 
         // Solo permitir las columnas conocidas del plugin.
         switch (column) {
+            case "kills":
+            case "deaths":
             case "ores_mined":
             case "active_seconds":
                 break;
@@ -219,6 +225,8 @@ public class PlaceholderManager {
 
     private long getStat(Player player, String column) {
         switch (column) {
+            case "kills":
+            case "deaths":
             case "ores_mined":
             case "active_seconds":
                 break;

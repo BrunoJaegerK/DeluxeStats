@@ -43,13 +43,16 @@ public class SeasonRewardManager {
      * correctamente la temporada.
      */
     public void registerSeasonRewards(int seasonId) throws SQLException {
+        if (!rewardsConfig.getBoolean("settings.enabled", false)) {
+            plugin.getLogger().info("Recompensas de temporada desactivadas; no se generarán premios.");
+            return;
+        }
         int topSize = Math.max(
                 1,
                 rewardsConfig.getInt("settings.top-size", 10)
         );
 
         String[] categories = {
-                "kills",
                 "ores_mined",
                 "active_seconds"
         };
@@ -184,7 +187,8 @@ public class SeasonRewardManager {
      * Intenta entregar las recompensas pendientes de un jugador.
      */
     public void deliverPendingRewards(Player player) {
-        if (player == null || !player.isOnline()) {
+        if (!rewardsConfig.getBoolean("settings.enabled", false)
+                || player == null || !player.isOnline()) {
             return;
         }
 

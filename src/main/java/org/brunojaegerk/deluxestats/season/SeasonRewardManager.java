@@ -43,7 +43,7 @@ public class SeasonRewardManager {
      * correctamente la temporada.
      */
     public void registerSeasonRewards(int seasonId) throws SQLException {
-        if (!rewardsConfig.getBoolean("settings.enabled", false)) {
+        if (!rewardsConfig.getBoolean("settings.enabled", true)) {
             plugin.getLogger().info("Recompensas de temporada desactivadas; no se generarán premios.");
             return;
         }

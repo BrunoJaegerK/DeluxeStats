@@ -273,7 +273,7 @@ El siguiente ejemplo corresponde a la estructura utilizada por el recurso de con
 ```yaml
 settings:
   # Activa o desactiva los premios automáticos de temporada.
-  enabled: false
+  enabled: true
 
   # Número de jugadores premiados por categoría.
   top-size: 10
@@ -329,7 +329,7 @@ Las recompensas pendientes se guardan en la base de datos y pueden entregarse cu
 - `commands` contiene los comandos que se ejecutarán para entregar cada premio.
 - `{player}` se sustituye por el nombre del jugador destinatario.
 
-Puedes personalizar los comandos para entregar objetos, dinero u otras recompensas compatibles con los comandos disponibles en tu servidor. Con `enabled: false`, no se generan ni se entregan recompensas pendientes.
+Puedes personalizar los comandos para entregar objetos, dinero u otras recompensas compatibles con los comandos disponibles en tu servidor. Con `enabled: false`, no se generan ni se entregan recompensas pendientes. El valor predeterminado es `true` para conservar el comportamiento anterior.
 
 **Recomendación:** haz una copia de seguridad de `seasons.yml` antes de modificarlo. Utiliza una configuración YAML válida para evitar errores al cargar las recompensas.
 
